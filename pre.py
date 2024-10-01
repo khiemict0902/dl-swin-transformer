@@ -23,7 +23,7 @@ img = img.unsqueeze(0)  # Add batch dimension
 with torch.no_grad():
     out = model(img)
 
-labels = ['AnnualCrop', 'Forest', 'HerbaceousVegetation', 'Highway','Industrial','Pasture','PẻmanentCrop','Residential','River','SeaLake']
+labels = ['AnnualCrop', 'Forest', 'HerbaceousVegetation', 'Highway','Industrial','Pasture','PermanentCrop','Residential','River','SeaLake']
 
 _, index = torch.max(out, 1)
  
