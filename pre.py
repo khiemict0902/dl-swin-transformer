@@ -7,7 +7,7 @@ import torch.nn as nn
 model = models.swin_t()
 model.head = nn.Linear(model.head.in_features, 10)
 print(model)
-model.load_state_dict(torch.load("./out.pth", map_location="cpu"))
+model.load_state_dict(torch.load("./out.pth", map_location="cuda"))
 model.eval()
 
 preprocess = transforms.Compose([
@@ -16,16 +16,14 @@ preprocess = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-img = Image.open("./2750/River/River_1.jpg")
+img = Image.open("ssa.png")
 img = preprocess(img)
 img = img.unsqueeze(0)  # Add batch dimension
 
 with torch.no_grad():
-    output = model(img)
+    out = model(img)
 
 labels = ['AnnualCrop', 'Forest', 'HerbaceousVegetation', 'Highway','Industrial','Pasture','PẻmanentCrop','Residential','River','SeaLake']
-
-out = output
 
 _, index = torch.max(out, 1)
  

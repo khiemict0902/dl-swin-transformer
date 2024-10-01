@@ -10,7 +10,6 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = models.swin_t()
 print(model)
 
-
 num_classes = 10
 model.head = nn.Linear(model.head.in_features, num_classes)
 
@@ -25,20 +24,13 @@ transform = transforms.Compose([
 
 
 train_dataset = datasets.ImageFolder(root='./2750', transform=transform)
-# test_dataset = datasets.ImageFolder(root='./2750', transform=transform)
 
 print(train_dataset)
 
-train_loader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=True, num_workers=2)
-# test_loader = DataLoader(dataset=test_dataset, batch_size=32, shuffle=False, num_workers=2)
+train_loader = DataLoader(dataset=train_dataset, batch_size=32, shuffle=True, num_workers=8)
 
 criterion = nn.CrossEntropyLoss()
-
-
-optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=0.0001)
-
-lossNums = []
-acc = []
+optimizer = torch.optim.SGD(model.parameters(), lr=0.001)
 
 def train_model(model, train_loader, criterion, optimizer, device, num_epochs=10):
     model.train()  
@@ -72,15 +64,9 @@ def train_model(model, train_loader, criterion, optimizer, device, num_epochs=10
         # Print statistics for the epoch
         epoch_loss = running_loss / total_samples
         accuracy = correct_predictions / total_samples
-        lossNums.append(epoch_loss)
-        acc.append(accuracy)
         print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {epoch_loss:.4f}, Accuracy: {accuracy:.4f}')
 
 train_model(model, train_loader, criterion, optimizer, device, num_epochs=10)
 torch.save(model.state_dict(),'out.pth')
-
-plt.plot(10,lossNums)
-plt.show()
-
 
 
